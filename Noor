@@ -1,0 +1,116 @@
+#include <iostream>
+#include <cmath>
+using namespace std;
+
+#define NULL 0
+
+int strlen(char* text)
+{
+	int cnt = 0;
+	while (*text != NULL)
+	{
+		cnt++;
+		text++;
+	}
+	return cnt;
+}
+
+int indexOf(char* text, const char* txtToReplace)
+{
+	int sizeOfWord = strlen(txtToReplace), cnt = 0, i = 0;
+	while (*text != NULL)
+	{
+		i++;
+		if (*text == *txtToReplace)
+		{
+			cnt++;
+			txtToReplace++;
+		}
+		else
+		{
+			while (cnt != 0)
+			{
+				txtToReplace--;
+				cnt--;
+			}
+		}
+		if (cnt == sizeOfWord)
+		{
+			return i - sizeOfWord;
+		}
+		text++;
+	}
+	return -1;
+}
+
+int lastIndexOf(char* text, const char* txtToReplace)
+{
+	int sizeOfWord = strlen(txtToReplace), cnt = 0, i = 0, index = 0;
+	while (*text != NULL)
+	{
+		i++;
+		if (*text == *txtToReplace)
+		{
+			cnt++;
+			txtToReplace++;
+		}
+		else
+		{
+			while (cnt != 0)
+			{
+				txtToReplace--;
+				cnt--;
+			}
+		}
+		if (cnt == sizeOfWord)
+		{
+			index = i - sizeOfWord;
+		}
+		text++;
+	}
+	return index;
+}
+
+
+void stringReplaceOp(char* text, const char* txtToReplace, const char* valueOfTxt, int pos)
+{
+	int sizeOfVal = strlen(valueOfTxt);
+	int sizeOfRep = strlen(txtToReplace);
+	char temp[100];
+	int stIndex = pos + sizeOfRep;
+	int stIndexTwo = pos + sizeOfVal;
+	int st = pos;
+	int i = 0;
+	while (i < 100)
+	{
+		temp[i] = *(text + stIndex);
+		stIndex++;
+		i++;
+	}
+	for (int i = st, j = 0; i < 100; i++, j++)
+	{
+		text[i] = valueOfTxt[j];
+	}
+	for (int i = stIndexTwo, j = 0; i < 100; i++, j++)
+	{
+		text[i] = temp[j];
+	}
+}
+
+void stringReplace(char* text, const char* txtToReplace, const char* valueOfTxt)
+{
+	int st = indexOf(text, txtToReplace);
+	stringReplaceOp(text, txtToReplace, valueOfTxt, st);
+	int stl = lastIndexOf(text, txtToReplace);
+	stringReplaceOp(text, txtToReplace, valueOfTxt, stl);
+}
+
+int main()
+{
+	char text[100] = "This is C++ lab, C++ is harder than java";
+	cout << "\n- Text Before Replace => " << text << endl;
+	cout << "\n- The Length Before Replace => " << strlen(text) << endl; // 40
+	stringReplace(text, "C++", "C/C++");
+	cout << "\n- The Length After Replace => " << strlen(text) << endl; // 44
+	cout << "\n- Text After Replace => " << text << endl; //This is C/C++ lab, C/C++ is harder than java
+}
